@@ -59,6 +59,23 @@ This will result in the folder `WebKit` being created inside `src`. It contains 
 - If you get an error like `Uncaught (in promise) Error: 'Browser' domain was not found` from `Connection.js:162` you are trying to inspect a page that is not inspectable  (this could be caused by having Safari extensions installed). Refer to [http://localhost:9222/](http://localhost:9222/) for the available pages and put the correct one at the end of the URL (for example [`http://localhost:8080/Main.html?ws=localhost:9222/devtools/page/2`](http://localhost:8080/Main.html?ws=localhost:9222/devtools/page/2)) for inspecting the second page.
 - In case your inspector window stays empty, open the dev tools of your local browser to check the console for errors.
   - If you get an error like `WebSocket connection to 'ws://localhost:9222/devtools/page/1' failed:` from `BrowserInspectorFrontendHost.js:97`, try unplugging your device and plugging it back in while the site you want to debug is open in Safari. Once you see the ios-webkit-debug-proxy console window display a message like `Connected :9222 to Himbeers iPad (...)`, refresh the inspector page inside your browser (do not use the refresh button on the inspector page, refresh the entire site from your browser).
+- In case you get strange javascript errors, make sure to have the latest version available. After a version upgrade could happen that a stale cache is served from the browser. Some mitigations:
+  1) ensure "Disable cache" in enabled in the broswer `Developer Tools` for `http://localhost:8080/`
+  2) the `start` script could be changed to force a `-c-1` (that means "no cache"):
+
+> start.ps1
+
+``` ps1
+http-server.ps1 -a $SRV_HOST -p $PORT $DIR 2>&1 | Out-Null
+http-server.ps1 -a $SRV_HOST -p $PORT -c-1 $DIR 2>&1 | Out-Null
+```
+
+> start.sh
+
+``` sh
+   http-server -a $HOST -p $PORT $DIR
+   http-server -a $HOST -p $PORT -c-1 $DIR
+```
 
 ### Exiting
 
